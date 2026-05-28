@@ -7,7 +7,11 @@ import { submeterFaturaAction } from "@/actions/fatura-action";
 import { useState } from "react";
 
 export default function Home() {
-  const [mensagemStatus, setMensagemStatus] = useState<{ tipo: "sucesso" | "erro", texto: string } | null>(null);
+
+  const [mensagemStatus, setMensagemStatus] = useState<{
+    tipo: "sucesso" | "erro",
+    texto: string
+  } | null>(null);
 
   const {
     register,
@@ -19,90 +23,203 @@ export default function Home() {
   });
 
   const onSubmit = async (data: FormFaturaData) => {
-    setMensagemStatus(null); // Limpar mensagens anteriores
 
-    // Como vamos enviar um ficheiro real para o servidor, usamos FormData
+    setMensagemStatus(null);
+
     const formData = new FormData();
+
     formData.append("nome", data.nome);
     formData.append("email", data.email);
-    if (data.telefone) formData.append("telefone", data.telefone);
-    formData.append("fatura", data.fatura[0]); // O ficheiro em si
 
-    // Chamar a nossa Server Action Segura
+    if (data.telefone) {
+      formData.append("telefone", data.telefone);
+    }
+
+    formData.append("fatura", data.fatura[0]);
+
     const resultado = await submeterFaturaAction(formData);
 
     if (resultado.erro) {
-      setMensagemStatus({ tipo: "erro", texto: resultado.erro });
-    } else if (resultado.sucesso) {
-      setMensagemStatus({ tipo: "sucesso", texto: "Fatura submetida com sucesso! Obrigado." });
-      reset(); // Limpa o formulário após sucesso
+
+      setMensagemStatus({
+        tipo: "erro",
+        texto: resultado.erro,
+      });
+
+    } else {
+
+      setMensagemStatus({
+        tipo: "sucesso",
+        texto: "Fatura submetida com sucesso! Obrigado.",
+      });
+
+      reset();
     }
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-          Envio de Faturas 🛡️
+
+    <main className="form-page">
+
+      {/* HERO */}
+
+      <section className="form-hero">
+
+        <span className="form-badge">
+          Simulação Gratuita
+        </span>
+
+        <h1>
+          Faça a sua simulação gratuita e descubra quanto pode poupar!
         </h1>
 
-        {/* Feedback Visual para o Utilizador */}
-        {mensagemStatus && (
-          <div className={`p-4 mb-6 rounded-lg text-sm font-semibold ${mensagemStatus.tipo === "sucesso" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-            {mensagemStatus.texto}
-          </div>
-        )}
+        <p>
+          Analisamos gratuitamente os seus custos atuais e mostramos
+          quanto poderá poupar com uma solução mais vantajosa.
+        </p>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>
-            <input
-              {...register("nome")}
-              type="text"
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-black"
-            />
-            {errors.nome && <p className="text-red-500 text-xs mt-1">{errors.nome.message}</p>}
-          </div>
+      </section>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input
-              {...register("email")}
-              type="email"
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-black"
-            />
-            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+      {/* FORM CARD */}
+
+      <section className="form-wrapper">
+
+        <div className="form-card">
+
+          <div className="form-card-header">
+
+            <h2>
+              Dados para análise
+            </h2>
+
+            <p>
+              Os seus dados são tratados com total segurança.
+            </p>
+
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Telefone (Opcional)</label>
-            <input
-              {...register("telefone")}
-              type="tel"
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-black"
-            />
-          </div>
+          {/* STATUS */}
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Fatura (PDF ou Imagem)</label>
-            <input
-              {...register("fatura")}
-              type="file"
-              accept=".pdf, image/jpeg, image/png"
-              className="w-full px-4 py-2 border rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 text-black"
-            />
-            {errors.fatura && <p className="text-red-500 text-xs mt-1">{errors.fatura.message as string}</p>}
-          </div>
+          {mensagemStatus && (
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-50"
+            <div className={`status-message ${mensagemStatus.tipo}`}>
+
+              {mensagemStatus.texto}
+
+            </div>
+
+          )}
+
+          {/* FORM */}
+
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="energy-form"
           >
-            {isSubmitting ? "A Guardar no Cofre..." : "Enviar Fatura"}
-          </button>
-        </form>
-      </div>
+
+            {/* NOME */}
+
+            <div className="input-group">
+
+              <label>
+                Nome Completo
+              </label>
+
+              <input
+                {...register("nome")}
+                type="text"
+                placeholder="O seu nome"
+              />
+
+              {errors.nome && (
+                <p className="error-text">
+                  {errors.nome.message}
+                </p>
+              )}
+
+            </div>
+
+            {/* EMAIL */}
+
+            <div className="input-group">
+
+              <label>
+                Email
+              </label>
+
+              <input
+                {...register("email")}
+                type="email"
+                placeholder="email@exemplo.com"
+              />
+
+              {errors.email && (
+                <p className="error-text">
+                  {errors.email.message}
+                </p>
+              )}
+
+            </div>
+
+            {/* TELEFONE */}
+
+            <div className="input-group">
+
+              <label>
+                Telefone (Opcional)
+              </label>
+
+              <input
+                {...register("telefone")}
+                type="tel"
+                placeholder="+351 912 345 678"
+              />
+
+            </div>
+
+            {/* FICHEIRO */}
+
+            <div className="input-group">
+
+              <label>
+                Fatura (PDF ou Imagem)
+              </label>
+
+              <input
+                {...register("fatura")}
+                type="file"
+                accept=".pdf,image/jpeg,image/png"
+                className="file-input"
+              />
+
+              {errors.fatura && (
+                <p className="error-text">
+                  {errors.fatura.message as string}
+                </p>
+              )}
+
+            </div>
+
+            {/* BUTTON */}
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="submit-button"
+            >
+
+              {isSubmitting
+                ? "A analisar..."
+                : "Enviar Fatura"}
+
+            </button>
+
+          </form>
+
+        </div>
+
+      </section>
+
     </main>
   );
 }
