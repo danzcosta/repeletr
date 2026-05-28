@@ -38,7 +38,13 @@ export default function Home() {
       formData.append("telefone", `${indicativo} ${data.telefone}`);
     }
 
+    // 1. Fatura de Eletricidade (Obrigatória)
     formData.append("fatura", data.fatura[0]);
+
+    // 2. Fatura de Gás (Opcional) - Só anexa se o cliente tiver escolhido um ficheiro
+    if (data.faturaGas && data.faturaGas.length > 0) {
+      formData.append("faturaGas", data.faturaGas[0]);
+    }
 
     const resultado = await submeterFaturaAction(formData);
 
@@ -232,9 +238,9 @@ export default function Home() {
               </div>
             </div>
 
-            {/* FICHEIRO */}
+            {/* FICHEIRO ELETRICIDADE */}
             <div className="input-group">
-              <label>Fatura (PDF ou Imagem)</label>
+              <label>Fatura de Eletricidade (Obrigatório)</label>
               <input
                 {...register("fatura")}
                 type="file"
@@ -246,13 +252,28 @@ export default function Home() {
               )}
             </div>
 
+            {/* FICHEIRO GÁS (NOVO) */}
+            <div className="input-group">
+              <label>Fatura de Gás (Opcional)</label>
+              <input
+                {...register("faturaGas")}
+                type="file"
+                accept=".pdf,image/jpeg,image/png"
+                className="file-input"
+              />
+              {/* Usamos as string no erro porque o Zod formata assim o 'any' type error */}
+              {errors.faturaGas && (
+                <p className="error-text">{errors.faturaGas.message as string}</p>
+              )}
+            </div>
+
             {/* BUTTON */}
             <button
               type="submit"
               disabled={isSubmitting}
               className="submit-button"
             >
-              {isSubmitting ? "A analisar..." : "Enviar Fatura"}
+              {isSubmitting ? "A analisar..." : "Enviar Faturas"}
             </button>
           </form>
         </div>

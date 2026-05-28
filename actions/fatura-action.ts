@@ -11,7 +11,6 @@ export async function submeterFaturaAction(formData: FormData) {
   const emailDestino = process.env.EMAIL_DESTINO_NOTIFICACOES;
 
   if (!supabaseUrl || !supabaseKey || !resendApiKey || !emailDestino) {
-    console.error("Credenciais em falta no ficheiro .env");
     return { erro: "Erro de configuração no servidor." };
   }
 
@@ -22,28 +21,36 @@ export async function submeterFaturaAction(formData: FormData) {
     const nome = formData.get("nome") as string;
     const email = formData.get("email") as string;
     const telefone = formData.get("telefone") as string;
+    
+    // Ficheiros
     const file = formData.get("fatura") as File;
+    const fileGas = formData.get("faturaGas") as File | null;
 
     if (!file || file.size === 0) {
-      return { erro: "Ficheiro inválido ou não encontrado." };
+      return { erro: "Fatura de eletricidade inválida ou não encontrada." };
     }
 
-    // 1. Preparar o ficheiro
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const fileExt = file.name.split('.').pop();
-    const nomeFicheiroSeguro = `${crypto.randomUUID()}.${fileExt}`;
+    // 1. Processar Fatura Eletricidade
+    const bytes1 = await file.arrayBuffer();
+    const buffer1 = Buffer.from(bytes1);
+    const fileExt1 = file.name.split('.').pop();
+    const nomeSeguro1 = `${crypto.randomUUID()}.${fileExt1}`;
 
-    // 2. Upload para o Supabase (Continua a guardar no cofre por segurança)
-    const { error: uploadError } = await supabase.storage
-      .from("faturas-privadas")
-      .upload(nomeFicheiroSeguro, buffer, {
-        contentType: file.type,
-      });
+    await supabase.storage.from("faturas-privadas").upload(nomeSeguro1, buffer1, { contentType: file.type });
+    
+    // Preparar array de anexos para o Email
+    const anexosEmail = [{ filename: `Eletricidade_${file.name}`, content: buffer1 }];
 
-    if (uploadError) {
-      console.error("Erro no Storage:", uploadError);
-      return { erro: "Falha ao guardar o ficheiro." };
+    // 2. Processar Fatura Gás (Se existir)
+    let nomeSeguro2 = null;
+    if (fileGas && fileGas.size > 0) {
+      const bytes2 = await fileGas.arrayBuffer();
+      const buffer2 = Buffer.from(bytes2);
+      const fileExt2 = fileGas.name.split('.').pop();
+      nomeSeguro2 = `${crypto.randomUUID()}.${fileExt2}`;
+
+      await supabase.storage.from("faturas-privadas").upload(nomeSeguro2, buffer2, { contentType: fileGas.type });
+      anexosEmail.push({ filename: `Gas_${fileGas.name}`, content: buffer2 });
     }
 
     // 3. Guardar na Base de Dados
@@ -52,38 +59,29 @@ export async function submeterFaturaAction(formData: FormData) {
         nome,
         email,
         telefone: telefone || null,
-        faturaPath: nomeFicheiroSeguro,
+        faturaPath: nomeSeguro1,
+        faturaGasPath: nomeSeguro2,
       },
     });
 
-    // 4. Enviar Email COM O ANEXO
+    // 4. Enviar Email
     await resend.emails.send({
       from: 'REPELETR Notificações <onboarding@resend.dev>',
       to: emailDestino,
-      subject: `🚨 Nova Simulação Recebida - ${nome}`,
+      subject: `🚨 Simulação Recebida - ${nome}`,
       html: `
         <div style="font-family: sans-serif; padding: 20px; color: #333;">
-          <h2 style="color: #2563eb;">Nova Fatura Submetida! ⚡</h2>
-          <p>Recebeste um novo pedido de simulação através do portal <strong>REPELETR</strong>.</p>
-          
+          <h2 style="color: #2563eb;">Nova Submissão! ⚡</h2>
           <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
             <p><strong>Nome:</strong> ${nome}</p>
-            <p><strong>Email do Cliente:</strong> <a href="mailto:${email}">${email}</a></p>
+            <p><strong>Email:</strong> ${email}</p>
             <p><strong>Telefone:</strong> ${telefone || 'Não fornecido'}</p>
+            <p><strong>Fatura Gás incluída?</strong> ${nomeSeguro2 ? '✅ Sim' : '❌ Não'}</p>
           </div>
-
-          <p>A fatura do cliente segue em <strong>anexo</strong> neste email.</p>
-          <hr style="border: 1px solid #eee; margin-top: 30px;" />
-          <p style="font-size: 12px; color: #888;">Mensagem gerada automaticamente pelo sistema REPELETR.</p>
+          <p>As faturas seguem em <strong>anexo</strong> neste email.</p>
         </div>
       `,
-      // A MAGIA ACONTECE AQUI:
-      attachments: [
-        {
-          filename: file.name, // Mantém o nome original que o cliente deu ao ficheiro
-          content: buffer,     // Envia a imagem/pdf diretamente da memória
-        },
-      ],
+      attachments: anexosEmail,
     });
 
     return { sucesso: true };
