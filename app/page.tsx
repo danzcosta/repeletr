@@ -18,7 +18,32 @@ export default function Home() {
           12 meses com o mesmo preço KWH, 20 % de desconto todo o ano
         </p>
 
+        <p className="hero-text">
+          Para aceder aos descontos adicionais abaixo indicados , deverá aderir à app <strong> My Repsol</strong> .
+        </p>
+
       </section>
+
+      <div className="highlight-banner">
+
+        <div className="highlight-icon">
+          ⚡
+        </div>
+
+          <div className="highlight-content">
+
+          <h3>
+            Desconto de <span>20%</span> no kWh
+          </h3>
+
+          <p>
+            Num consumo de 300 kWh, poupa cerca de
+            <strong> 10 € por mês</strong>.
+          </p>
+
+        </div>
+
+      </div>
 
       {/* CARDS */}
 
@@ -53,7 +78,11 @@ export default function Home() {
           <h4>Combustível</h4>
 
           <p>
-            Desconto imediato até 6 cênt./litro
+            Desconto imediato até 6 cênt./litro e restante em saldo My Repsol
+          </p>
+
+          <p className="saving-text">
+                    Poupe até 4.50 € por abastecimento
           </p>
         </div>
 
@@ -75,7 +104,11 @@ export default function Home() {
           <h4>Carregamento elétrico</h4>
 
           <p>
-            Crédito adicional na app
+            Em saldo My Repsol
+          </p>
+
+          <p className="saving-text">
+                    Receba 2 € de saldo por cada 20 € carregados
           </p>
         </div>
 
@@ -97,7 +130,11 @@ export default function Home() {
           <h4>Garrafa de gás</h4>
 
           <p>
-            Cashback direto em saldo
+            Em saldo My Repsol
+          </p>
+
+          <p className="saving-text">
+            Receba 0,40 € de saldo numa garrafa de 13 kg
           </p>
         </div>
 
@@ -142,7 +179,11 @@ export default function Home() {
                   <h4>Combustível</h4>
 
                   <p>
-                    Desconto imediato até 6 cênt./litro
+                    Desconto imediato até 6 cênt./litro e restante em saldo My Repsol
+                  </p>
+
+                  <p className="saving-text">
+                    Poupe até 6.75 € por abastecimento
                   </p>
                 </div>
 
@@ -164,7 +205,11 @@ export default function Home() {
                   <h4>Eletricidade e gás</h4>
 
                   <p>
-                    Saldo acumulado na aplicação
+                    Em saldo My Repsol
+                  </p>
+
+                  <p className="saving-text">
+                    Poupe 1,50 € numa fatura de 75 €
                   </p>
                 </div>
 
@@ -186,7 +231,11 @@ export default function Home() {
                   <h4>Carregamento elétrico</h4>
 
                   <p>
-                    Crédito adicional na app
+                    Em saldo My Repsol
+                  </p>
+
+                  <p className="saving-text">
+                    Receba 3 € de saldo por cada 20 € carregados
                   </p>
                 </div>
 
@@ -208,7 +257,11 @@ export default function Home() {
                   <h4>Garrafa de gás</h4>
 
                   <p>
-                    Cashback direto em saldo
+                    Em saldo My Repsol
+                  </p>
+
+                  <p className="saving-text">
+                    Receba 0.80 € de saldo numa garrafa de 13 kg
                   </p>
                 </div>
 
@@ -253,7 +306,11 @@ export default function Home() {
                   <h4>Combustível</h4>
 
                   <p>
-                    Desconto imediato até 6 cênt./litro
+                    Desconto imediato até 6 cênt./litro e restante em saldo My Repsol
+                  </p>
+
+                  <p className="saving-text">
+                    Poupe até 9 € por abastecimento
                   </p>
                 </div>
 
@@ -275,7 +332,11 @@ export default function Home() {
                   <h4>Eletricidade e gás</h4>
 
                   <p>
-                    Saldo acumulado na aplicação
+                    Em saldo My Repsol
+                  </p>
+
+                  <p className="saving-text">
+                    Poupe 2.25 € numa fatura de 75 €*
                   </p>
                 </div>
 
@@ -297,7 +358,11 @@ export default function Home() {
                   <h4>Carregamento elétrico</h4>
 
                   <p>
-                    Crédito adicional na app
+                    Em saldo My Repsol
+                  </p>
+
+                  <p className="saving-text">
+                    Receba 4 € de saldo por cada 20 € carregados
                   </p>
                 </div>
 
@@ -319,7 +384,11 @@ export default function Home() {
                   <h4>Garrafa de gás</h4>
 
                   <p>
-                    Cashback direto em saldo
+                    Em saldo My Repsol
+                  </p>
+
+                  <p className="saving-text">
+                    Receba 1,20 € de saldo numa garrafa de 13 kg
                   </p>
                 </div>
 
