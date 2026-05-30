@@ -9,7 +9,7 @@ export default function Navbar() {
         {/* LOGO */}
 
         <Link href="/" className="logo">
-          My App
+          Repeletr
         </Link>
 
         {/* LINKS */}

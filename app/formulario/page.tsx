@@ -273,7 +273,7 @@ export default function Home() {
               disabled={isSubmitting}
               className="submit-button"
             >
-              {isSubmitting ? "A analisar..." : "Enviar Faturas"}
+              {isSubmitting ? "A analisar..." : "Submeter"}
             </button>
           </form>
         </div>
