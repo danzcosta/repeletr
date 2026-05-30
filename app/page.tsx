@@ -11,14 +11,11 @@ export default function Home() {
         </h1>
 
         <p className="hero-text">
-          Em mais de 90% dos casos analisados, os clientes conseguem
-          reduzir até 20% no custo base da eletricidade ao comparar o
-          serviço atual com uma nova solução de energia.
+          Poupe em todas as energias com os planos repsol , calcule a sua melhor tarifa de electricidade e/ ou gás 
         </p>
 
         <p className="hero-text">
-          Além da possível redução no valor mensal, ainda terá acesso
-          a vantagens adicionais como:
+          12 meses com o mesmo preço KWH, 20 % de desconto todo o ano
         </p>
 
       </section>
@@ -349,7 +346,7 @@ export default function Home() {
         </p>
 
         <p>
-          Disponibilizamos uma simulação gratuita e sem compromisso,
+          Disponibilizamos uma simulação gratuita e sem compromisso, 
           onde poderá comparar os seus custos atuais com uma alternativa
           mais vantajosa.
         </p>
